@@ -11,14 +11,11 @@ from .github import GithubService, GithubEvent
 
 @click.command()
 def validate():
-    GITHUB_EVENT_NAME = os.environ.get('GITHUB_EVENT_NAME')
-
-    if GITHUB_EVENT_NAME != 'pull_request':
-        return
-
-    GITHUB_EVENT_PATH = os.environ.get('GITHUB_EVENT_PATH')
-    pull_request_id: int = GithubEvent.get_pull_request_id(GITHUB_EVENT_PATH)
+    pull_request_id: int = os.environ.get('TRAVIS_PULL_REQUEST')
     GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+
+    if not pull_request_id:
+        return
 
     github_service = GithubService(GITHUB_TOKEN)
     github_service.use_pull_request_id(pull_request_id)
