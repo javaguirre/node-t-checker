@@ -11,5 +11,5 @@ docker-compose up
 ## Launch the tests
 
 ``` bash
-docker-compose run --rm validator poetry run python -m pytest
+docker-compose run --rm validator poetry run python -m pytest --cov=validator
 ```
