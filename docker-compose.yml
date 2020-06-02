@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+  validator:
+    build: .
+    image: alastria/node-t-validator
+    volumes:
+      - .:/code
