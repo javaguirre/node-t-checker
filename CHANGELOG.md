@@ -7,4 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2020.06.02]
+
+### Added
+
+- Dockerfile build with tags in Dockerhub
 - First version of the validator, public IP, node in Europe, valid json on files
