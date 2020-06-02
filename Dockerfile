@@ -12,4 +12,6 @@ RUN pip install 'poetry==1.0.5'
 COPY poetry.lock pyproject.toml ./
 RUN poetry install
 
+COPY . .
+
 CMD ["poetry", "run", "validator/main.py"]

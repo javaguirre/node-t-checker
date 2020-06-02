@@ -5,7 +5,6 @@ services:
 
 before_install:
 - docker pull javaguirre/node-t-checker:latest
-- docker ps -a
 
 script:
-- docker run javaguirre/node-t-checker /bin/sh -c "poetry run python -m pytest --cov=validator"
+- docker run javaguirre/node-t-checker /bin/sh -c "cd /code && poetry run python -m pytest --cov=validator"
