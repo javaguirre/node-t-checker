@@ -6,7 +6,7 @@ import click
 from .validator import NodeValidator
 from .formatter import ValidatorOutputFormatter
 from .types import ValidatorOutput
-from .github import GithubService, GithubEvent
+from .github import GithubService
 
 
 @click.command()

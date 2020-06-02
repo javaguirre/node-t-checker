@@ -19,11 +19,11 @@ class NodeValidator():
     def get_validation(self) -> ValidatorOutput:
         # TODO How to check if the new is in netstats in red?
         with open('data/validator-nodes', 'r') as file:
-            is_validator_valid=self.is_valid_json_file(file.readlines())
+            is_validator_valid=self.is_valid_json_file(file.read())
         with open('data/constellation-nodes.json', 'r') as file:
-            is_constellation_valid=self.is_valid_json_file(file.readlines())
+            is_constellation_valid=self.is_valid_json_file(file.read())
         with open('data/regular-nodes.json', 'r') as file:
-            is_regular_valid=self.is_valid_json_file(file.readlines())
+            is_regular_valid=self.is_valid_json_file(file.read())
 
         return ValidatorOutput(
             is_ip_public=self.is_ip_public(),
@@ -34,6 +34,10 @@ class NodeValidator():
             is_regular_valid=is_regular_valid,
             is_enode_in_directory_valid=self.has_valid_enode_and_ip_in_regular_directory()
         )
+
+    def is_geth_version_valid(self) -> bool:
+        # TODO
+        return True
 
     def is_ip_public(self) -> bool:
         output = subprocess.run(
@@ -84,7 +88,7 @@ class NodeValidator():
             return False
         return True
 
-    def check_valid_node_in_regular_directory(self):
+    def has_valid_enode_and_ip_in_regular_directory(self):
         with os.open(self.REGULAR_DIRECTORY_PATH, 'r') as file:
             file_output = file.readlines()
             # TODO
