@@ -6,6 +6,4 @@ services:
 before_install:
 - docker pull javaguirre/node-t-checker:latest
 script:
-- docker run -e TRAVIS_JOB_ID="$TRAVIS_JOB_ID" -e TRAVIS_BRANCH="$TRAVIS_BRANCH" javaguirre/node-t-checker /bin/sh -c "cd /code && poetry run python -m pytest --cov=validator"
-after_success:
-- coveralls
+- docker run javaguirre/node-t-checker /bin/sh -c "cd /code && poetry run python -m pytest --cov=validator"
