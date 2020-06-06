@@ -24,6 +24,7 @@ class ValidatorOutput:
 @dataclass(frozen=True)
 class NodeInformation:
     ip: str
+    enode: str
 
 
 @dataclass(frozen=True)

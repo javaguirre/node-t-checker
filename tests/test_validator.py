@@ -10,7 +10,7 @@ def test_is_ip_public_returncode_invalid_return_false(mocker):
     subprocess_output = b''
     subprocess_mock = SubprocessOutputMock(returncode=1, stdout=subprocess_output)
     mocker.patch.object(subprocess, 'run', return_value=subprocess_mock)
-    node_info = NodeInformation('1.2.3.4')
+    node_info = NodeInformation('1.2.3.4', 'myenode')
     validator = NodeValidator(node_info)
 
     is_valid = validator.is_ip_public()
@@ -31,7 +31,7 @@ def test_is_ip_public_return_true(mocker):
     '''
     subprocess_mock = SubprocessOutputMock(returncode=0, stdout=subprocess_output)
     mocker.patch.object(subprocess, 'run', return_value=subprocess_mock)
-    node_info = NodeInformation('1.2.3.4')
+    node_info = NodeInformation('1.2.3.4', 'myenode')
     validator = NodeValidator(node_info)
 
     is_valid = validator.is_ip_public()
@@ -52,7 +52,7 @@ def test_is_ip_public_return_false(mocker):
     '''
     subprocess_mock = SubprocessOutputMock(returncode=0, stdout=subprocess_output)
     mocker.patch.object(subprocess, 'run', return_value=subprocess_mock)
-    node_info = NodeInformation('1.2.3.4')
+    node_info = NodeInformation('1.2.3.4', 'myenode')
     validator = NodeValidator(node_info)
 
     is_valid = validator.is_ip_public()
@@ -63,7 +63,7 @@ def test_is_node_in_europe_returncode_invalid_return_false(mocker):
     subprocess_output = b''
     subprocess_mock = SubprocessOutputMock(returncode=1, stdout=subprocess_output)
     mocker.patch.object(subprocess, 'run', return_value=subprocess_mock)
-    node_info = NodeInformation('1.2.3.4')
+    node_info = NodeInformation('1.2.3.4', 'myenode')
     validator = NodeValidator(node_info)
 
     is_valid = validator.is_node_in_europe()
@@ -80,7 +80,7 @@ def test_is_node_in_europe_return_false(mocker):
     '''
     subprocess_mock = SubprocessOutputMock(returncode=0, stdout=subprocess_output)
     mocker.patch.object(subprocess, 'run', return_value=subprocess_mock)
-    node_info = NodeInformation('1.2.3.4')
+    node_info = NodeInformation('1.2.3.4', 'myenode')
     validator = NodeValidator(node_info)
 
     is_valid = validator.is_node_in_europe()
@@ -97,7 +97,7 @@ def test_is_node_in_europe_return_true(mocker):
     '''
     subprocess_mock = SubprocessOutputMock(returncode=0, stdout=subprocess_output)
     mocker.patch.object(subprocess, 'run', return_value=subprocess_mock)
-    node_info = NodeInformation('1.2.3.4')
+    node_info = NodeInformation('1.2.3.4', 'myenode')
     validator = NodeValidator(node_info)
 
     is_valid = validator.is_node_in_europe()
@@ -112,7 +112,7 @@ def test_is_valid_json_file_invalid_json_return_false(mocker):
           "https://195.55.232.91:9000/",
         ]
     '''
-    node_info = NodeInformation('1.2.3.4')
+    node_info = NodeInformation('1.2.3.4', 'myenode')
     validator = NodeValidator(node_info)
 
     is_valid = validator.is_valid_json_file(file_output)
@@ -127,7 +127,7 @@ def test_is_valid_json_file_valid_json_return_true():
           "https://195.55.232.91:9000/"
         ]
     '''
-    node_info = NodeInformation('1.2.3.4')
+    node_info = NodeInformation('1.2.3.4', 'myenode')
     validator = NodeValidator(node_info)
 
     is_valid = validator.is_valid_json_file(file_output)
@@ -141,7 +141,7 @@ def test_is_valid_json_file_invalid_fake_json_return_false():
         "enode://be6a6eef8c5ea5e64414126e0bdc10481543416ed3baf9bb10e66842f011404035291d6f93b2a770ce232a687bdaf5c2602d3cd8f696a835456d693f7947b3d3@51.138.52.113:21000?discport=0",
         "enode://0752557351410a2b31bb91a008c25510dccbbba53241937c77a061fe128c9e2102bbf3b7ee55cb85c37d980a85f5cf20ccde1f92bf10a12d68db8be78d3de705@52.50.15.212:21000?discport=0",
     '''
-    node_info = NodeInformation('1.2.3.4')
+    node_info = NodeInformation('1.2.3.4', 'myenode')
     validator = NodeValidator(node_info)
     is_valid = validator.is_valid_json_file(file_output, fake_json=True)
 
@@ -154,7 +154,7 @@ def test_is_valid_json_file_valid_fake_json_return_true():
         "enode://be6a6eef8c5ea5e64414126e0bdc10481543416ed3baf9bb10e66842f011404035291d6f93b2a770ce232a687bdaf5c2602d3cd8f696a835456d693f7947b3d3@51.138.52.113:21000?discport=0",
         "enode://0752557351410a2b31bb91a008c25510dccbbba53241937c77a061fe128c9e2102bbf3b7ee55cb85c37d980a85f5cf20ccde1f92bf10a12d68db8be78d3de705@52.50.15.212:21000?discport=0"
     '''
-    node_info = NodeInformation('1.2.3.4')
+    node_info = NodeInformation('1.2.3.4', 'myenode')
     validator = NodeValidator(node_info)
 
     is_valid = validator.is_valid_json_file(file_output, fake_json=True)

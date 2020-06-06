@@ -3,8 +3,9 @@ import re
 import logging
 import json
 import subprocess
-from typing import Optional
+from typing import Optional, List
 import requests
+from requests.exceptions import HTTPError
 
 from .types import NodeInformation, ValidatorOutput, EnodeRequestConfig
 
@@ -17,7 +18,6 @@ class NodeValidator():
 
     def __init__(self, node_info: NodeInformation):
         self.node_info = node_info
-        self.enode_config: Optional[EnodeRequestConfig] = None
 
     def use_enode_request_config(self, config: EnodeRequestConfig) -> None:
         self.enode_config = config
@@ -30,6 +30,8 @@ class NodeValidator():
             is_constellation_valid=self.is_valid_json_file(file.read())
         with open('data/regular-nodes.json', 'r') as file:
             is_regular_valid=self.is_valid_json_file(file.read())
+        with open(self.REGULAR_DIRECTORY_PATH, 'r') as file:
+            has_valid_enode = self.has_valid_enode_and_ip_in_regular_directory(file.readlines())
 
         return ValidatorOutput(
             is_ip_public=self.is_ip_public(),
@@ -38,7 +40,7 @@ class NodeValidator():
             is_validator_valid=is_validator_valid,
             is_constellation_valid=is_constellation_valid,
             is_regular_valid=is_regular_valid,
-            is_enode_in_directory_valid=self.has_valid_enode_and_ip_in_regular_directory()
+            is_enode_in_directory_valid=has_valid_enode
         )
 
     def is_geth_version_valid(self) -> bool:
@@ -95,8 +97,19 @@ class NodeValidator():
         return True
 
     def has_valid_enode_and_ip_in_regular_directory(
-        self
+        self, directory_enodes: List[str]
     ):
+        valid_enodes = self.get_valid_enodes_from_external_source()
+        enode = filter(
+            lambda item: self.node_info.enode in item,
+            directory_enodes)
+
+        try:
+            return bool(min(enode))
+        except ValueError:
+            return False
+
+    def get_valid_enodes_from_external_source(self) -> List[str]:
         results = requests.post(
             self.enode_config.url,
             data={
@@ -108,10 +121,12 @@ class NodeValidator():
         )
 
         try:
-            return results[0]['series'][0]['values']
-        except (KeyError, IndexError):
+            results.raise_for_status()
+        except HTTPError:
             return []
 
-        with os.open(self.REGULAR_DIRECTORY_PATH, 'r') as file:
-            file_output = file.readlines()
-            # TODO
+        try:
+            hosts = results.json()[0]['series'][0]['values']
+            return list(map(lambda item: item[1], hosts))
+        except (KeyError, IndexError):
+            return []
