@@ -20,10 +20,9 @@ class NodeValidator():
         self.node_info = node_info
 
     def use_enode_request_config(self, config: EnodeRequestConfig) -> None:
-        self.enode_config = config
+        self.enode_request_config = config
 
     def get_validation(self) -> ValidatorOutput:
-        # TODO How to check if the new is in netstats in red?
         with open('data/validator-nodes', 'r') as file:
             is_validator_valid=self.is_valid_json_file(file.read())
         with open('data/constellation-nodes.json', 'r') as file:
@@ -31,7 +30,7 @@ class NodeValidator():
         with open('data/regular-nodes.json', 'r') as file:
             is_regular_valid=self.is_valid_json_file(file.read())
         with open(self.REGULAR_DIRECTORY_PATH, 'r') as file:
-            has_valid_enode = self.has_valid_enode_and_ip_in_regular_directory(file.readlines())
+            has_valid_enode = self.has_valid_enode_and_ip_in_regular_directory(file.read())
 
         return ValidatorOutput(
             is_ip_public=self.is_ip_public(),
@@ -97,25 +96,21 @@ class NodeValidator():
         return True
 
     def has_valid_enode_and_ip_in_regular_directory(
-        self, directory_enodes: List[str]
-    ):
-        valid_enodes = self.get_valid_enodes_from_external_source()
-        enode = filter(
-            lambda item: self.node_info.enode in item,
-            directory_enodes)
+        self, directory_enodes: str
+    ) -> bool:
+        return self.node_info.enode in directory_enodes
 
-        try:
-            return bool(min(enode))
-        except ValueError:
-            return False
+    def is_enode_online(self) -> bool:
+        valid_hosts = self.get_valid_hosts_from_external_source()
+        return self.node_info.hostname in valid_hosts
 
-    def get_valid_enodes_from_external_source(self) -> List[str]:
+    def get_valid_hosts_from_external_source(self) -> List[str]:
         results = requests.post(
-            self.enode_config.url,
+            self.enode_request_config.url,
             data={
-                'user': self.enode_config.username,
-                'password': self.enode_config.password,
-                'db': self.enode_config.db,
+                'user': self.enode_request_config.username,
+                'password': self.enode_request_config.password,
+                'db': self.enode_request_config.db,
                 'q': 'SHOW TAG VALUES FROM "geth.txpool/underpriced.count" with key="host"'
             }
         )

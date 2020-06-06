@@ -23,16 +23,17 @@ class ValidatorOutput:
 
 @dataclass(frozen=True)
 class NodeInformation:
-    ip: str
-    enode: str
+    ip: str = ''
+    enode: str = ''
+    hostname: str = ''
 
 
 @dataclass(frozen=True)
 class EnodeRequestConfig:
-    url: str
-    username: str
-    password: str
-    db: str
+    url: str = ''
+    username: str = ''
+    password: str = ''
+    db: str = ''
 
 
 class PublishableOutput(ABC):
