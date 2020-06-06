@@ -3,7 +3,7 @@ from dataclasses import dataclass, asdict
 from typing import List
 
 
-@dataclass
+@dataclass(frozen=True)
 class ValidatorOutput:
     is_ip_public: bool
     is_node_in_europe: bool
@@ -21,9 +21,17 @@ class ValidatorOutput:
         ]
 
 
-@dataclass
+@dataclass(frozen=True)
 class NodeInformation:
     ip: str
+
+
+@dataclass(frozen=True)
+class EnodeRequestConfig:
+    url: str
+    username: str
+    password: str
+    db: str
 
 
 class PublishableOutput(ABC):

@@ -3,8 +3,10 @@ import re
 import logging
 import json
 import subprocess
+from typing import Optional
+import requests
 
-from .types import NodeInformation, ValidatorOutput
+from .types import NodeInformation, ValidatorOutput, EnodeRequestConfig
 
 
 class NodeValidator():
@@ -15,6 +17,10 @@ class NodeValidator():
 
     def __init__(self, node_info: NodeInformation):
         self.node_info = node_info
+        self.enode_config: Optional[EnodeRequestConfig] = None
+
+    def use_enode_request_config(self, config: EnodeRequestConfig) -> None:
+        self.enode_config = config
 
     def get_validation(self) -> ValidatorOutput:
         # TODO How to check if the new is in netstats in red?
@@ -88,7 +94,24 @@ class NodeValidator():
             return False
         return True
 
-    def has_valid_enode_and_ip_in_regular_directory(self):
+    def has_valid_enode_and_ip_in_regular_directory(
+        self
+    ):
+        results = requests.post(
+            self.enode_config.url,
+            data={
+                'user': self.enode_config.username,
+                'password': self.enode_config.password,
+                'db': self.enode_config.db,
+                'q': 'SHOW TAG VALUES FROM "geth.txpool/underpriced.count" with key="host"'
+            }
+        )
+
+        try:
+            return results[0]['series'][0]['values']
+        except (KeyError, IndexError):
+            return []
+
         with os.open(self.REGULAR_DIRECTORY_PATH, 'r') as file:
             file_output = file.readlines()
             # TODO

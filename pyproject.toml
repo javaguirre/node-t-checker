@@ -11,6 +11,7 @@ PyGithub = "^1.51"
 pytest-mock = "^3.1.0"
 pytest-cov = "^2.9.0"
 mypy = "^0.770"
+requests = "^2.23.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
